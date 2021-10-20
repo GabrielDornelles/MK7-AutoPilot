@@ -32,8 +32,8 @@ def pre_process(frame):
     return torch.from_numpy(image)
 
 
-path = "./mk7-model.pth"
-device = torch.device("cpu")
+path = "./mk7-model-roi.pth"
+device = torch.device("cuda")
 model = steering_model()
 model.load_state_dict(torch.load(path, map_location=device))
 
@@ -41,43 +41,29 @@ prev = 0
 framerate=5
 keyboard = Controller()
 
-left_flag = False
-right_flag = False
-
 def update_steering(steering):
-    if steering<0:
-        #if right_flag:
-        keyboard.release(Key.right)
-            #right_flag = 0
+    keyboard.release(Key.right)
+    keyboard.release(Key.left)
+    if steering<-0.5:
         keyboard.press(Key.left)
-        #left_flag = 1 
-    if steering>0:
-        #if left_flag:
-        keyboard.release(Key.left)
-            #left_flag = 0
+    if steering>0.5:
         keyboard.press(Key.right)
-        #right_flag = 1
+       
 
 steering = 0
 monitor_thread = threading.Thread(target=update_steering(steering), args=())
 monitor_thread.daemon = True
 
-# from pykeyboard import PyKeyboard
-# k = PyKeyboard()
 if __name__ == '__main__':
     monitor_thread.start()
     while True:
-        time_elapsed = time.time() - prev
-        if time_elapsed > 1./framerate:
+        # time_elapsed = time.time() - prev
+        # if time_elapsed > 1./framerate:
 
-            prev= time.time()
-            screen = cv2.cvtColor(np.array(ImageGrab.grab(bbox=(0,250,1060,800))), cv2.COLOR_BGR2RGB)
-            frame = pre_process(screen)
-            steering = model(frame)
-            print(steering[0])
-            update_steering(steering)
-            #keyboard.press(Key.up)
-            # if steering<0:
-            #     keyboard.press(Key.left)
-            # if steering>0:
-            #     keyboard.press(Key.right)
+        #     prev= time.time()
+        screen = cv2.cvtColor(np.array(ImageGrab.grab(bbox=(0,340,1060,670))), cv2.COLOR_BGR2RGB)
+        frame = pre_process(screen)
+        steering = model(frame)
+        print(steering[0])
+        update_steering(steering)
+          
