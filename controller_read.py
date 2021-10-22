@@ -106,4 +106,5 @@ if __name__ == '__main__':
         if time_elapsed > 1./framerate:
             prev= time.time()
             screen = cv2.cvtColor(np.array(ImageGrab.grab(bbox=(0,250,1060,800))), cv2.COLOR_BGR2RGB)
-            cv2.imwrite(f"mk7_dataset/{str(joy.read())}-hash_{uuid.uuid4()}.png", screen)
+             cv2.imwrite(f"mk7_dataset/{str(joy.read())}-hash_{uuid.uuid4()}.png", screen)
+
