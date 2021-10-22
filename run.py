@@ -23,7 +23,6 @@ def pre_process(frame):
     image = image.resize(
         (66,200), resample=Image.BILINEAR
     )
-
     image = np.array(image)
     augmented = aug(image=image)
     image = augmented["image"]
@@ -51,19 +50,31 @@ def update_steering(steering):
        
 
 steering = 0
-monitor_thread = threading.Thread(target=update_steering(steering), args=())
-monitor_thread.daemon = True
+#monitor_thread = threading.Thread(target=update_steering(steering), args=())
+#monitor_thread.daemon = True
+import pyvjoy
+MAX_VJOY = 32767
+j = pyvjoy.VJoyDevice(1)
+def play_function(j,X,Y,Z,XRot):
+    MAX_VJOY = 32767
+    j.data.wAxisX = int(X * MAX_VJOY)
+    j.data.wAxisY = int(Y * MAX_VJOY)
+    j.data.wAxisZ = int(Z * MAX_VJOY)
+    j.data.wAxisXRot = int(XRot * MAX_VJOY)
+    j.update()
 
 if __name__ == '__main__':
-    monitor_thread.start()
+    #monitor_thread.start()
     while True:
+        play_function(j, 0.7, 0, 0.5, XRot)
+        print("playing")
         # time_elapsed = time.time() - prev
         # if time_elapsed > 1./framerate:
 
         #     prev= time.time()
-        screen = cv2.cvtColor(np.array(ImageGrab.grab(bbox=(0,340,1060,670))), cv2.COLOR_BGR2RGB)
-        frame = pre_process(screen)
-        steering = model(frame)
-        print(steering[0])
-        update_steering(steering)
+        #screen = cv2.cvtColor(np.array(ImageGrab.grab(bbox=(0,340,1060,670))), cv2.COLOR_BGR2RGB)
+        #frame = pre_process(screen)
+        #steering = model(frame)
+        #print(steering[0])
+        #update_steering(steering)
           
