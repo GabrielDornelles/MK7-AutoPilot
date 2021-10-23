@@ -1,5 +1,9 @@
 import torch.nn as nn
-
+import torch
+import torch.nn.functional as F
+import matplotlib.pyplot as plt
+import torchvision
+import cv2
 
 class steering_model(nn.Module):
     #reference: https://arxiv.org/abs/1604.07316
@@ -25,3 +29,6 @@ class steering_model(nn.Module):
     def forward(self,inputs):
         x = self.backbone(inputs)
         return x
+    
+    def feature_maps(self,layer):
+        return self.backbone[layer].weight.detach().clone()

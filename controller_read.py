@@ -99,12 +99,20 @@ class XboxController:
 
 prev = 0
 framerate=5
+
 if __name__ == '__main__':
     joy = XboxController()
     while True:
-        time_elapsed = time.time() - prev
-        if time_elapsed > 1./framerate:
-            prev= time.time()
-            screen = cv2.cvtColor(np.array(ImageGrab.grab(bbox=(0,250,1060,800))), cv2.COLOR_BGR2RGB)
-             cv2.imwrite(f"mk7_dataset/{str(joy.read())}-hash_{uuid.uuid4()}.png", screen)
+        # time_elapsed = time.time() - prev
+        # if time_elapsed > 1./framerate:
+        #     prev= time.time()
+        # bbox=(0,250,1060,800))
+        screen = cv2.cvtColor(np.array(ImageGrab.grab(bbox=(0,300,1920,620))), cv2.COLOR_BGR2RGB)
+        cv2.imshow("frame-view", screen)
 
+        if cv2.waitKey(33) & 0xFF in (
+            ord('q'), 
+            27, 
+        ):
+            break
+        #cv2.imwrite(f"mk8_dataset-roi-mmf/{str(joy.read())}-hash_{uuid.uuid4()}.png", screen)
